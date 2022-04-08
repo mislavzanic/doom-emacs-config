@@ -8,9 +8,10 @@
        :desc "List bookmarks" "L" #'list-bookmarks
        :desc "Save current bookmarks to bookmark file" "w" #'bookmark-save))
 
-(setq fancy-splash-image "~/.config/doom/logo.png")
-(setq +doom-dashboard-banner-file (expand-file-name "doom.png" doom-private-dir)
-      +doom-dashboard-banner-dir  "~/.emacs.d/modules/ui/doom-dashboard/")
+(setq fancy-splash-image "~/.config/.dotfiles/config/emacs/doom/logo.png")
+(setq +doom-dashboard-banner-file (expand-file-name "logo.png" doom-private-dir)
+      +doom-dashboard-banner-dir  "~/.config/doom-emacs/modules/ui/doom-dashboard/")
+
 
 (set-frame-parameter (selected-frame) 'alpha '(85 . 85))
 (add-to-list 'default-frame-alist '(alpha . (85 . 85)))
@@ -24,7 +25,8 @@
 (after! doom-modeline
     (setq doom-modeline-major-mode-icon t
           doom-modeline-buffer-state-icon t
-          doom-modeline-buffer-encoding nil)
+          doom-modeline-buffer-encoding nil
+          doom-modeline-bar-width 2)
     (remove-hook 'doom-modeline-mode-hook #'size-indication-mode))
 
 (setq display-line-numbers-type 'relative
@@ -78,6 +80,9 @@
                                 ("mp4" . "mpv")
                                 ("pdf" . "zathura"))))
 
+(map! :map evil-window-map
+      "SPC" #'rotate-layout)
+
 (defun efs/configure-shell ()
   (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
 
@@ -98,11 +103,11 @@
     (setq eshell-visual-commands '("htop" "zsh" "vim"))))
 
 (when IS-LINUX
-    (load! "+exwm"))
+    (load! "~/.config/.dotfiles/config/emacs/exwm/+exwm"))
 
 (setq doom-font (font-spec :family "JetBrains Mono Nerd Font" :size 12)
       doom-variable-pitch-font (font-spec :family "JetBrains Mono Nerd Font" :size 12)
-      doom-big-font (font-spec :family "JetBrains Mono Nerd Font" :size 24))
+      doom-big-font (font-spec :family "JetBrains Mono Nerd Font" :size 26))
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
@@ -143,7 +148,7 @@
 
 (defun efs/org-babel-tangle-config ()
   (when (string-equal (buffer-file-name)
-                      (expand-file-name "~/.config/.dotfiles/config/doom/config.org"))
+                      (expand-file-name "~/.config/.dotfiles/config/emacs/doom/config.org"))
     (let ((org-confirm-babel-evaluate nil))
       (org-babel-tangle))))
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
@@ -192,3 +197,5 @@
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
                          (lsp))))
+
+(setq which-key-idle-delay 0.5)

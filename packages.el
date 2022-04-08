@@ -72,4 +72,3 @@
 
 (package! org-bullets)
 (package! org-journal)
-
