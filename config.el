@@ -17,6 +17,8 @@
 (set-frame-parameter (selected-frame) 'fullscreen 'maximized)
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
+(setq modus-themes-vivendi-color-overrides
+      '((bg-alt . "#000000")))
 (setq doom-theme 'modus-vivendi)
 
 (after! doom-modeline
@@ -65,8 +67,35 @@
   (kbd "j") 'peep-dired-next-file
   (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
-;; Get file icons in dired
-;(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+
+(use-package! all-the-icons-dired
+  :hook (dired-mode . all-the-icons-dired-mode))
+
+(use-package! dired-open
+  :config
+  (setq dired-open-extensions '(("png" . "feh")
+                                ("mkv" . "mpv")
+                                ("mp4" . "mpv")
+                                ("pdf" . "zathura"))))
+
+(defun efs/configure-shell ()
+  (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
+
+  (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
+
+  (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'counsel-esh-history)
+  (evil-normalize-keymaps)
+
+  (setq eshell-history-size         10000
+        eshell-buffer-maximum-lines 10000
+        eshell-hist-ignoredumps t
+        eshell-scroll-to-bottom-on-input t))
+(use-package! eshell
+  :hook (eshell-first-time-mode . efs/configure-shell)
+  :config
+  (with-eval-after-load 'esh-opt
+    (setq eshell-destroy-buffer-when-process-dies t)
+    (setq eshell-visual-commands '("htop" "zsh" "vim"))))
 
 (when IS-LINUX
     (load! "+exwm"))
@@ -104,12 +133,21 @@
        :desc "Ivy push view" "v p" #'ivy-push-view
        :desc "Ivy switch view" "v s" #'ivy-switch-view))
 
+(map! :leader
+      (:prefix ("R" . "Revert")
+       :desc "Revert file" "R f" #'magit-revert))
+
+(map! :leader
+      (:prefix ("r" . "Remote")
+       :desc "Add remote" "r a" #'magit-remote-add))
+
 (defun efs/org-babel-tangle-config ()
   (when (string-equal (buffer-file-name)
                       (expand-file-name "~/.config/.dotfiles/config/doom/config.org"))
     (let ((org-confirm-babel-evaluate nil))
       (org-babel-tangle))))
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
+
 
 (map! :leader
       :desc "Org babel tangle" "m B" #'org-babel-tangle)

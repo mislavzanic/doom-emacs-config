@@ -29,7 +29,9 @@
 
 (defun efs/exwm-update-title ()
   (pcase exwm-class-name
-    ("Firefox" (exwm-workspace-rename-buffer (format "Firefox: %s" exwm-title)))))
+    ("Firefox" (exwm-workspace-rename-buffer (format "Firefox: %s" exwm-title)))
+    ("zathura" (exwm-workspace-rename-buffer (format "Zathura: %s" exwm-title)))
+    ("qutebrowser" (exwm-workspace-rename-buffer (format "qutebrowser: %s" exwm-title)))))
 
 (use-package! exwm
   :init
@@ -63,9 +65,6 @@
 
   (efs/set-wallpaper)
 
-  ;; (require 'exwm-systemtray)
-  ;; (exwm-systemtray-enable)
-
   (setq exwm-input-prefix-keys
     '(?\C-x
       ?\C-u
@@ -84,20 +83,28 @@
           ;; Reset to line-mode (C-c C-k switches to char-mode via exwm-input-release-keyboard)
           ([?\s-r] . exwm-reset)
 
-          ([?\s-b] . ibuffer)
+          ([?\s-b] . counsel-switch-buffer)
+          ([?\s-q] . kill-buffer)
+          ([?\s-Q] . kill-this-buffer)
 
-          ;; ([?\s-m] . exwm-layout-toggle-mode-line)
+          (,(kbd "s-. c") . helpful-command)
 
-          ([?\s-c] . exwm-input-toggle-keyboard)
+          ([?\s-i] . exwm-input-toggle-keyboard)
 
           ;; Move between windows
           ([?\s-h] . windmove-left)
           ([?\s-j] . windmove-down)
           ([?\s-k] . windmove-up)
           ([?\s-l] . windmove-right)
+          ([?\s-H] . windower-swap-left)
+          ([?\s-J] . windower-swap-below)
+          ([?\s-K] . windower-swap-above)
+          ([?\s-L] . windower-swap-right)
 
           (,(kbd "s-<tab>") . windower-toggle-single)
           (,(kbd "s-s") . windower-toggle-split)
+
+          (,(kbd "s-o") . counsel-google)
 
           ;; Launch applications via shell command
           ([?\s-&] . (lambda (command)

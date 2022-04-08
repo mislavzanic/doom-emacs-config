@@ -49,20 +49,14 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-;; (require 'rust-mode)
-
-;;(require 'ccls)
-;;(setq ccls-executable "/usr/bin/ccls")
-
-;;(require 'lsp-python-ms)
-;;(setq lsp-python-ms-auto-install-server t)
-;;(add-hook 'python-mode-hook #'lsp)
 
 (package! kaolin-themes)
 (package! modus-themes)
 
 (package! peep-dired)
 (package! dired-icon)
+(package! all-the-icons-dired)
+(package! dired-open)
 
 (package! smart-tabs-mode)
 (package! nix-mode)
