@@ -3,6 +3,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(doom-modeline-bar-width 4)
  '(package-selected-packages
    '(vterm-toggle all-the-icons-ivy lsp-pyright org-superstar dmenu exwm vterm)))
 (custom-set-faces
@@ -17,3 +18,4 @@
  '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
  '(org-level-4 ((t (:inherit outline-4 :height 1.1))))
  '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
+(put 'customize-group 'disabled nil)

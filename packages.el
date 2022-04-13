@@ -58,6 +58,9 @@
 (package! all-the-icons-dired)
 (package! dired-open)
 
+(package! page-break-lines)
+(package! dashboard)
+
 (package! smart-tabs-mode)
 (package! nix-mode)
 (package! haskell-mode)

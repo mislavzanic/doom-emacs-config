@@ -22,11 +22,22 @@
       '((bg-alt . "#000000")))
 (setq doom-theme 'modus-vivendi)
 
+(use-package! dashboard
+  :config
+  (dashboard-setup-startup-hook)
+    (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*"))
+          dashboard-startup-banner "~/.config/.dotfiles/config/emacs/doom/logo.png"
+          dashboard-center-content t))
+
 (after! doom-modeline
     (setq doom-modeline-major-mode-icon t
           doom-modeline-buffer-state-icon t
           doom-modeline-buffer-encoding nil
-          doom-modeline-bar-width 2)
+          doom-modeline-bar-width 6
+          doom-modeline-lsp t
+          doom-modeline-github nil)
+    (custom-set-faces '(mode-line ((t (:height 1.0))))
+                      '(mode-line-inactive ((t (:height 1.0)))))
     (remove-hook 'doom-modeline-mode-hook #'size-indication-mode))
 
 (setq display-line-numbers-type 'relative

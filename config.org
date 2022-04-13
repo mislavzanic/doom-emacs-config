@@ -41,6 +41,16 @@ Doom Emacs uses ‘SPC b’ for keybindings related to bookmarks and buffers.  B
 (setq doom-theme 'modus-vivendi)
 #+end_src
 
+** Dashboard
+#+begin_src emacs-lisp :tangle ./config.el
+(use-package! dashboard
+  :config
+  (dashboard-setup-startup-hook)
+    (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*"))
+          dashboard-startup-banner "~/.config/.dotfiles/config/emacs/doom/logo.png"
+          dashboard-center-content t))
+
+#+end_src
 
 ** Doom modeline
 #+begin_src emacs-lisp :tangle ./config.el
@@ -48,7 +58,11 @@ Doom Emacs uses ‘SPC b’ for keybindings related to bookmarks and buffers.  B
     (setq doom-modeline-major-mode-icon t
           doom-modeline-buffer-state-icon t
           doom-modeline-buffer-encoding nil
-          doom-modeline-bar-width 2)
+          doom-modeline-bar-width 6
+          doom-modeline-lsp t
+          doom-modeline-github nil)
+    (custom-set-faces '(mode-line ((t (:height 1.0))))
+                      '(mode-line-inactive ((t (:height 1.0)))))
     (remove-hook 'doom-modeline-mode-hook #'size-indication-mode))
 #+end_src
 
@@ -362,6 +376,9 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
 (package! dired-icon)
 (package! all-the-icons-dired)
 (package! dired-open)
+
+(package! page-break-lines)
+(package! dashboard)
 
 (package! smart-tabs-mode)
 (package! nix-mode)
