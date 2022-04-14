@@ -155,7 +155,9 @@
        :desc "Ivy push view" "v p" #'ivy-push-view
        :desc "Ivy switch view" "v s" #'ivy-switch-view))
 
-
+(use-package! nyan-mode
+  :config
+  (nyan-mode t))
 
 (defun efs/org-babel-tangle-config ()
   (when (string-equal (buffer-file-name)
