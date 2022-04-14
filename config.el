@@ -91,6 +91,12 @@
                                 ("mp4" . "mpv")
                                 ("pdf" . "zathura"))))
 
+(global-set-key (kbd "C-x w") 'elfeed)
+
+(setq elfeed-feeds
+      '(("https://www.reddit.com/r/linux.rss" reddit linux)
+        ("https://based.cooking/rss.xml" cooking)))
+
 (map! :map evil-window-map
       "SPC" #'rotate-layout)
 
@@ -149,13 +155,7 @@
        :desc "Ivy push view" "v p" #'ivy-push-view
        :desc "Ivy switch view" "v s" #'ivy-switch-view))
 
-(map! :leader
-      (:prefix ("R" . "Revert")
-       :desc "Revert file" "R f" #'magit-revert))
 
-(map! :leader
-      (:prefix ("r" . "Remote")
-       :desc "Add remote" "r a" #'magit-remote-add))
 
 (defun efs/org-babel-tangle-config ()
   (when (string-equal (buffer-file-name)
@@ -182,12 +182,12 @@
   :custom
   (org-bullets-bullet-list '("◉" "●" "○" "◆" "●" "○" "◆")))
 
-(font-lock-add-keywords 'org-mode
-                        '(("^ *\\([-]\\) "
-                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-(font-lock-add-keywords 'org-journal-mode
-                        '(("^ *\\([-]\\) "
-                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+;; (font-lock-add-keywords 'org-mode
+;;                         '(("^ *\\([-]\\) "
+;;                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+;; (font-lock-add-keywords 'org-journal-mode
+;;                         '(("^ *\\([-]\\) "
+;;                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
 (set-face-attribute 'variable-pitch nil :font "Cantarell")
 
@@ -203,6 +203,26 @@
       org-journal-time-prefix "** "
       org-journal-date-format "%B %d, %Y (%A) "
       org-journal-file-format "%Y-%m-%d.org")
+
+(use-package! org-roam
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory "~/.local/org_roam")
+  (org-roam-complete-everywhere t)
+  :bind (("C-c n f" . org-roam-node-find)
+         ("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n i" . org-roam-node-insert)
+         :map org-roam-map
+         ("C-M-i" . completion-at-point))
+  :config
+  (org-roam-setup))
+
+(map! :leader
+      (:prefix ("r" . "Org Roam")
+       :desc "Create a node" "l" #'org-roam-buffer-toggle
+       :desc "Find a node" "f" #'org-roam-node-find
+       :desc "Insert a node" "i" #'org-roam-node-insert))
 
 (use-package! lsp-pyright
   :hook (python-mode . (lambda ()

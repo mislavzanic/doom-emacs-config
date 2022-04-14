@@ -145,6 +145,14 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
                                 ("pdf" . "zathura"))))
 #+end_src
 
+* Elfeed
+#+begin_src emacs-lisp :tangle ./config.el
+(global-set-key (kbd "C-x w") 'elfeed)
+
+(setq elfeed-feeds
+      '(("https://www.reddit.com/r/linux.rss" reddit linux)
+        ("https://based.cooking/rss.xml" cooking)))
+#+end_src
 * Evil
 #+begin_src emacs-lisp :tangle ./config.el
 (map! :map evil-window-map
@@ -236,13 +244,6 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
 
 * Magit
 #+begin_src emacs-lisp :tangle ./config.el
-(map! :leader
-      (:prefix ("R" . "Revert")
-       :desc "Revert file" "R f" #'magit-revert))
-
-(map! :leader
-      (:prefix ("r" . "Remote")
-       :desc "Add remote" "r a" #'magit-remote-add))
 #+end_src
 
 * Org mode
@@ -273,12 +274,12 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
   :custom
   (org-bullets-bullet-list '("◉" "●" "○" "◆" "●" "○" "◆")))
 
-(font-lock-add-keywords 'org-mode
-                        '(("^ *\\([-]\\) "
-                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-(font-lock-add-keywords 'org-journal-mode
-                        '(("^ *\\([-]\\) "
-                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+;; (font-lock-add-keywords 'org-mode
+;;                         '(("^ *\\([-]\\) "
+;;                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+;; (font-lock-add-keywords 'org-journal-mode
+;;                         '(("^ *\\([-]\\) "
+;;                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
 (set-face-attribute 'variable-pitch nil :font "Cantarell")
 #+end_src
@@ -300,6 +301,30 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
       org-journal-time-prefix "** "
       org-journal-date-format "%B %d, %Y (%A) "
       org-journal-file-format "%Y-%m-%d.org")
+#+end_src
+
+** Org-roam
+#+begin_src emacs-lisp :tangle ./config.el
+(use-package! org-roam
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory "~/.local/org_roam")
+  (org-roam-complete-everywhere t)
+  :bind (("C-c n f" . org-roam-node-find)
+         ("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n i" . org-roam-node-insert)
+         :map org-roam-map
+         ("C-M-i" . completion-at-point))
+  :config
+  (org-roam-setup))
+
+(map! :leader
+      (:prefix ("r" . "Org Roam")
+       :desc "Create a node" "l" #'org-roam-buffer-toggle
+       :desc "Find a node" "f" #'org-roam-node-find
+       :desc "Insert a node" "i" #'org-roam-node-insert))
+
 #+end_src
 
 * Python
@@ -394,4 +419,7 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
 
 (package! org-bullets)
 (package! org-journal)
+(package! org-roam)
+
+;; (package! elfeed-goodies)
 #+end_src

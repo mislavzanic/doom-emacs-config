@@ -75,3 +75,6 @@
 
 (package! org-bullets)
 (package! org-journal)
+(package! org-roam)
+
+;; (package! elfeed-goodies)
