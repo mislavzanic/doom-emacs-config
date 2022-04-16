@@ -27,5 +27,7 @@
 (package! org-bullets)
 (package! org-journal)
 (package! org-roam)
+(package! org-tree-slide)
 
 (package! nyan-mode)
+(package! ob-prolog)

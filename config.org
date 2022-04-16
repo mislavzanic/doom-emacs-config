@@ -151,7 +151,8 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
 
 (setq elfeed-feeds
       '(("https://www.reddit.com/r/linux.rss" reddit linux)
-        ("https://based.cooking/rss.xml" cooking)))
+        ("https://based.cooking/rss.xml" cooking)
+        ("https://lukesmith.xyz/rss.xml" lukesmith linux)))
 #+end_src
 * Evil
 #+begin_src emacs-lisp :tangle ./config.el
@@ -250,19 +251,8 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
 #+end_src
 
 * Org mode
+** General
 #+begin_src emacs-lisp :tangle ./config.el
-
-(defun efs/org-babel-tangle-config ()
-  (when (string-equal (buffer-file-name)
-                      (expand-file-name "~/.config/.dotfiles/config/emacs/doom/config.org"))
-    (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle))))
-(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
-
-
-(map! :leader
-      :desc "Org babel tangle" "m B" #'org-babel-tangle)
-
 (setq org-directory "~/.local/org/"
       org-agenda-files '("~/.local/org/agenda.org")
       org-default-notes-file (expand-file-name "notes.org" org-directory)
@@ -277,13 +267,6 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
   :custom
   (org-bullets-bullet-list '("◉" "●" "○" "◆" "●" "○" "◆")))
 
-;; (font-lock-add-keywords 'org-mode
-;;                         '(("^ *\\([-]\\) "
-;;                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-;; (font-lock-add-keywords 'org-journal-mode
-;;                         '(("^ *\\([-]\\) "
-;;                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
 (set-face-attribute 'variable-pitch nil :font "Cantarell")
 #+end_src
 
@@ -297,8 +280,26 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
   '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
 #+end_src
 
+** Org-babel
+#+begin_src emacs-lisp :tangle ./config.el
+(defun efs/org-babel-tangle-config ()
+  (when (string-equal (buffer-file-name)
+                      (expand-file-name "~/.config/.dotfiles/config/emacs/doom/config.org"))
+    (let ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle))))
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((prolog . t)))
+
+(map! :leader
+      :desc "Org babel tangle" "m B" #'org-babel-tangle)
+#+end_src
+
 ** Org-journal
 #+begin_src emacs-lisp :tangle ./config.el
+(global-set-key (kbd "C-x j") 'org-journal-new-entry)
 (setq org-journal-dir "~/.local/org/journal/"
       org-journal-date-prefix "* "
       org-journal-time-prefix "** "
@@ -327,7 +328,13 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
        :desc "Create a node" "l" #'org-roam-buffer-toggle
        :desc "Find a node" "f" #'org-roam-node-find
        :desc "Insert a node" "i" #'org-roam-node-insert))
+#+end_src
 
+** Org-tree-slide
+#+begin_src emacs-lisp :tangle ./config.el
+(use-package! org-tree-slide
+  :config
+  (org-image-actual-width nil))
 #+end_src
 
 * Python
@@ -374,6 +381,8 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
 (package! org-bullets)
 (package! org-journal)
 (package! org-roam)
+(package! org-tree-slide)
 
 (package! nyan-mode)
+(package! ob-prolog)
 #+end_src

@@ -95,7 +95,8 @@
 
 (setq elfeed-feeds
       '(("https://www.reddit.com/r/linux.rss" reddit linux)
-        ("https://based.cooking/rss.xml" cooking)))
+        ("https://based.cooking/rss.xml" cooking)
+        ("https://lukesmith.xyz/rss.xml" lukesmith linux)))
 
 (map! :map evil-window-map
       "SPC" #'rotate-layout)
@@ -159,17 +160,6 @@
   :config
   (nyan-mode t))
 
-(defun efs/org-babel-tangle-config ()
-  (when (string-equal (buffer-file-name)
-                      (expand-file-name "~/.config/.dotfiles/config/emacs/doom/config.org"))
-    (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle))))
-(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
-
-
-(map! :leader
-      :desc "Org babel tangle" "m B" #'org-babel-tangle)
-
 (setq org-directory "~/.local/org/"
       org-agenda-files '("~/.local/org/agenda.org")
       org-default-notes-file (expand-file-name "notes.org" org-directory)
@@ -184,13 +174,6 @@
   :custom
   (org-bullets-bullet-list '("◉" "●" "○" "◆" "●" "○" "◆")))
 
-;; (font-lock-add-keywords 'org-mode
-;;                         '(("^ *\\([-]\\) "
-;;                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-;; (font-lock-add-keywords 'org-journal-mode
-;;                         '(("^ *\\([-]\\) "
-;;                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
 (set-face-attribute 'variable-pitch nil :font "Cantarell")
 
 (custom-set-faces
@@ -200,6 +183,21 @@
   '(org-level-4 ((t (:inherit outline-4 :height 1.1))))
   '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
 
+(defun efs/org-babel-tangle-config ()
+  (when (string-equal (buffer-file-name)
+                      (expand-file-name "~/.config/.dotfiles/config/emacs/doom/config.org"))
+    (let ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle))))
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'efs/org-babel-tangle-config)))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((prolog . t)))
+
+(map! :leader
+      :desc "Org babel tangle" "m B" #'org-babel-tangle)
+
+(global-set-key (kbd "C-x j") 'org-journal-new-entry)
 (setq org-journal-dir "~/.local/org/journal/"
       org-journal-date-prefix "* "
       org-journal-time-prefix "** "
@@ -225,6 +223,10 @@
        :desc "Create a node" "l" #'org-roam-buffer-toggle
        :desc "Find a node" "f" #'org-roam-node-find
        :desc "Insert a node" "i" #'org-roam-node-insert))
+
+(use-package! org-tree-slide
+  :config
+  (org-image-actual-width nil))
 
 (use-package! lsp-pyright
   :hook (python-mode . (lambda ()

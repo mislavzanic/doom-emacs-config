@@ -4,6 +4,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(doom-modeline-bar-width 4)
+ '(elfeed-feeds
+   '("https://lukesmith.xyz/rss.xml"
+     ("https://www.reddit.com/r/linux.rss" reddit linux)
+     ("https://based.cooking/rss.xml" cooking)
+     ("https://lukesmith.xyz/rss.xml" lukesmith linux)))
  '(package-selected-packages
    '(elfeed vterm-toggle all-the-icons-ivy lsp-pyright org-superstar dmenu exwm vterm)))
 (custom-set-faces
