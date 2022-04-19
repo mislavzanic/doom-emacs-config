@@ -96,7 +96,9 @@
 (setq elfeed-feeds
       '(("https://www.reddit.com/r/linux.rss" reddit linux)
         ("https://based.cooking/rss.xml" cooking)
-        ("https://lukesmith.xyz/rss.xml" lukesmith linux)))
+        ("https://lukesmith.xyz/rss.xml" lukesmith linux)
+        ("https://www.hashicorp.com/blog/feed.xml" hashicorp devops infra)
+        ("https://www.reddit.com/r/sysadmin/" reddit sysadmin)))
 
 (map! :map evil-window-map
       "SPC" #'rotate-layout)
@@ -123,9 +125,9 @@
 (when IS-LINUX
     (load! "~/.config/.dotfiles/config/emacs/exwm/+exwm"))
 
-(setq doom-font (font-spec :family "JetBrains Mono Nerd Font" :size 12)
-      doom-variable-pitch-font (font-spec :family "JetBrains Mono Nerd Font" :size 12)
-      doom-big-font (font-spec :family "JetBrains Mono Nerd Font" :size 26))
+(setq doom-font (font-spec :family "JetBrains Mono" :size 12)
+      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 12)
+      doom-big-font (font-spec :family "JetBrains Mono" :size 26))
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
@@ -224,9 +226,17 @@
        :desc "Find a node" "f" #'org-roam-node-find
        :desc "Insert a node" "i" #'org-roam-node-insert))
 
+(defun efs/presentation-setup ()
+  (setq text-scale-mode-amount 3)
+  (org-latex-preview)
+  (text-scale-mode 1))
+
+(defun efs/presentation-end ()
+  (text-scale-mode 0))
+
 (use-package! org-tree-slide
-  :config
-  (org-image-actual-width nil))
+  :hook ((org-tree-slide-play . efs/presentation-setup)
+         (org-tree-slide-stop . efs/presentation-end)))
 
 (use-package! lsp-pyright
   :hook (python-mode . (lambda ()

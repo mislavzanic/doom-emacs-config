@@ -152,7 +152,9 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
 (setq elfeed-feeds
       '(("https://www.reddit.com/r/linux.rss" reddit linux)
         ("https://based.cooking/rss.xml" cooking)
-        ("https://lukesmith.xyz/rss.xml" lukesmith linux)))
+        ("https://lukesmith.xyz/rss.xml" lukesmith linux)
+        ("https://www.hashicorp.com/blog/feed.xml" hashicorp devops infra)
+        ("https://www.reddit.com/r/sysadmin/" reddit sysadmin)))
 #+end_src
 * Evil
 #+begin_src emacs-lisp :tangle ./config.el
@@ -202,9 +204,9 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
 
 #+begin_src emacs-lisp :tangle ./config.el
 
-(setq doom-font (font-spec :family "JetBrains Mono Nerd Font" :size 12)
-      doom-variable-pitch-font (font-spec :family "JetBrains Mono Nerd Font" :size 12)
-      doom-big-font (font-spec :family "JetBrains Mono Nerd Font" :size 26))
+(setq doom-font (font-spec :family "JetBrains Mono" :size 12)
+      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 12)
+      doom-big-font (font-spec :family "JetBrains Mono" :size 26))
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
@@ -332,9 +334,17 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
 
 ** Org-tree-slide
 #+begin_src emacs-lisp :tangle ./config.el
+(defun efs/presentation-setup ()
+  (setq text-scale-mode-amount 3)
+  (org-latex-preview)
+  (text-scale-mode 1))
+
+(defun efs/presentation-end ()
+  (text-scale-mode 0))
+
 (use-package! org-tree-slide
-  :config
-  (org-image-actual-width nil))
+  :hook ((org-tree-slide-play . efs/presentation-setup)
+         (org-tree-slide-stop . efs/presentation-end)))
 #+end_src
 
 * Python
