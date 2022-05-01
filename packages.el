@@ -31,3 +31,9 @@
 
 (package! nyan-mode)
 (package! ob-prolog)
+
+(when (string-equal (getenv "USER") "mzanic")
+    (package! kubernetes)
+    (package! kubernetes-evil))
+
+(unpin! (:lang go) (:tools lsp))

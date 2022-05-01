@@ -8,6 +8,9 @@
        :desc "List bookmarks" "L" #'list-bookmarks
        :desc "Save current bookmarks to bookmark file" "w" #'bookmark-save))
 
+(defadvice! prompt-for-buffer (&rest _)
+  :after 'window-split (switch-to-buffer))
+
 (setq fancy-splash-image "~/.config/.dotfiles/config/emacs/doom/logo.png")
 (setq +doom-dashboard-banner-file (expand-file-name "logo.png" doom-private-dir)
       +doom-dashboard-banner-dir  "~/.config/doom-emacs/modules/ui/doom-dashboard/")
@@ -102,6 +105,10 @@
 
 (map! :map evil-window-map
       "SPC" #'rotate-layout)
+(define-key input-decode-map [(control ?i)] [control-i])
+(define-key input-decode-map [(control ?I)] [(shift control-i)])
+(map! :map 'evil-motion-state-map "C-i" nil)
+(define-key evil-motion-state-map [control-i] 'evil-jump-forward)
 
 (defun efs/configure-shell ()
   (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
@@ -158,6 +165,9 @@
        :desc "Ivy push view" "v p" #'ivy-push-view
        :desc "Ivy switch view" "v s" #'ivy-switch-view))
 
+(when (string-equal (getenv "USER") "mzanic")
+    (load "~/.config/.dotfiles/config/emacs/doom/+k8s"))
+
 (use-package! nyan-mode
   :config
   (nyan-mode t))
@@ -166,6 +176,7 @@
       org-agenda-files '("~/.local/org/agenda.org")
       org-default-notes-file (expand-file-name "notes.org" org-directory)
       org-agenda-start-with-log-mode t
+      org-hide-emphasis-markers t
       org-log-done 'time
       org-log-into-drawer t
       org-ellipsis " ▼ ")
@@ -177,6 +188,12 @@
   (org-bullets-bullet-list '("◉" "●" "○" "◆" "●" "○" "◆")))
 
 (set-face-attribute 'variable-pitch nil :font "Cantarell")
+
+(setq org-entities-user
+      '(("vdots" "\\vdots{}" t "&x2999" "..." "..." "⁞")
+        ("mathcalR" "\\mathcal{R}" t "&x211B" "R" "R" "ℛ")
+        ("mathbbR" "\\mathbb{R}" t "&x211D" "R" "R" "ℝ")
+        ("mathbbN" "\\mathbb{N}" t "&x2115" "N" "N" "ℕ")))
 
 (custom-set-faces
   '(org-level-1 ((t (:inherit outline-1 :height 1.4))))
@@ -206,6 +223,25 @@
       org-journal-date-format "%B %d, %Y (%A) "
       org-journal-file-format "%Y-%m-%d.org")
 
+(defun org-roam-node-insert-immediate (arg &rest args)
+  (interactive "P")
+  (let ((args (cons arg args))
+        (org-roam-capture-templates (list (append (car org-roam-capture-templates)
+                                                  '(:immediate-finish t)))))
+    (apply #'org-roam-node-insert args)))
+
+(defun efs/org-roam-capture-inbox ()
+  (interactive)
+  (org-roam-capture- :node (org-roam-node-create)
+                    :templates '(("i" "inbox" plain "* %?"
+                                 :if-new (file+head "inbox.org" "#+title: Inbox\n")))))
+(global-set-key (kbd "C-c n b") #'efs/org-roam-capture-inbox)
+
+;;
+;; ORG-ROAM
+;;
+
+
 (use-package! org-roam
   :init
   (setq org-roam-v2-ack t)
@@ -215,16 +251,55 @@
   :bind (("C-c n f" . org-roam-node-find)
          ("C-c n l" . org-roam-buffer-toggle)
          ("C-c n i" . org-roam-node-insert)
+         ("C-c n I" . org-roam-node-insert-immediate)
          :map org-roam-map
          ("C-M-i" . completion-at-point))
   :config
-  (org-roam-setup))
+  (org-roam-setup)
+
+  (defun efs/org-roam-filter-by-tag (tag-name)
+    (lambda (node)
+      (member tag-name (org-roam-node-tags node))))
+
+  (setq org-roam-capture-templates
+        '(("m" "main" plain
+           "%?"
+           :if-new (file+head "main/${slug}.org"
+                              "#+title: ${title}\n")
+           :immediate-finish t
+           :unnarrowed t)
+          ("n" "notes" plain "%?"
+           :if-new
+           (file+head "notes/${title}.org" "#+title: ${title}\n#+filetags: :notes:\n#+startup: entitiespretty\n")
+           :immediate-finish t
+           :unnarrowed t)
+          ("w" "work notes" plain "%?"
+           :if-new
+           (file+head "work_notes/${title}.org" "#+title: ${title}\n#+filetags: :work:\n")
+           :immediate-finish t
+           :unnarrowed t)))
+
+  (cl-defmethod org-roam-node-type ((node org-roam-node))
+    "Return the TYPE of NODE."
+    (condition-case nil
+        (file-name-nondirectory
+         (directory-file-name
+          (file-name-directory
+           (file-relative-name (org-roam-node-file node) org-roam-directory))))
+      (error "")))
+
+  (setq org-roam-node-display-template
+        (concat "(${type}) ${title:*} " (propertize "${tags:10}" 'face 'org-tag))))
 
 (map! :leader
       (:prefix ("r" . "Org Roam")
        :desc "Create a node" "l" #'org-roam-buffer-toggle
        :desc "Find a node" "f" #'org-roam-node-find
        :desc "Insert a node" "i" #'org-roam-node-insert))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun efs/presentation-setup ()
   (setq text-scale-mode-amount 3)
@@ -244,3 +319,7 @@
                          (lsp))))
 
 (setq which-key-idle-delay 0.5)
+
+
+(global-set-key (kbd "C-x x") '+vterm/toggle)
+(global-set-key (kbd "C-x b") 'counsel-switch-buffer)
