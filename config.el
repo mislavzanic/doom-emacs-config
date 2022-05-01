@@ -297,10 +297,6 @@
        :desc "Find a node" "f" #'org-roam-node-find
        :desc "Insert a node" "i" #'org-roam-node-insert))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defun efs/presentation-setup ()
   (setq text-scale-mode-amount 3)
   (org-latex-preview)
