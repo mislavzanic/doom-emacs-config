@@ -8,6 +8,8 @@
        :desc "List bookmarks" "L" #'list-bookmarks
        :desc "Save current bookmarks to bookmark file" "w" #'bookmark-save))
 
+(global-set-key (kbd "C-x b") 'exwm-workspace-switch-to-buffer)
+
 (defadvice! prompt-for-buffer (&rest _)
   :after 'window-split (switch-to-buffer))
 
@@ -100,6 +102,8 @@
       '(("https://www.reddit.com/r/linux.rss" reddit linux)
         ("https://based.cooking/rss.xml" cooking)
         ("https://lukesmith.xyz/rss.xml" lukesmith linux)
+        ("https://protesilaos.com/codelog.xml" prot coding)
+        ("https://protesilaos.com/books.xml" prot books)
         ("https://www.hashicorp.com/blog/feed.xml" hashicorp devops infra)
         ("https://www.reddit.com/r/sysadmin/" reddit sysadmin)))
 
@@ -159,6 +163,9 @@
         (dmenu . 20)
         (t . 10)))
 ;; (ivy-posframe-mode 1) ; 1 enables posframe-mode, 0 disables it.
+
+(global-set-key (kbd "C-s") 'swiper)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
 
 (map! :leader
       (:prefix ("v" . "Ivy")
@@ -309,6 +316,8 @@
   :hook ((org-tree-slide-play . efs/presentation-setup)
          (org-tree-slide-stop . efs/presentation-end)))
 
+(global-set-key (kbd "C-x p") 'projectile-switch-project)
+
 (use-package! lsp-pyright
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
@@ -316,6 +325,55 @@
 
 (setq which-key-idle-delay 0.5)
 
+(use-package! pulsar)
+(setq pulsar-pulse-functions
+      ;; NOTE 2022-04-09: The commented out functions are from before
+      ;; the introduction of `pulsar-pulse-on-window-change'.  Try that
+      ;; instead.
+      '(recenter-top-bottom
+        move-to-window-line-top-bottom
+        reposition-window
+        ;; bookmark-jump
+        ;; other-window
+        ;; delete-window
+        ;; delete-other-windows
+        forward-page
+        backward-page
+        scroll-up-command
+        scroll-down-command
+        ;; windmove-right
+        ;; windmove-left
+        ;; windmove-up
+        ;; windmove-down
+        ;; windmove-swap-states-right
+        ;; windmove-swap-states-left
+        ;; windmove-swap-states-up
+        ;; windmove-swap-states-down
+        ;; tab-new
+        ;; tab-close
+        ;; tab-next
+
+        evil-window-middle
+        evil-window-bottom
+        evil-window-up
+
+        org-next-visible-heading
+        org-previous-visible-heading
+        org-forward-heading-same-level
+        org-backward-heading-same-level
+        outline-backward-same-level
+        outline-forward-same-level
+        outline-next-visible-heading
+        outline-previous-visible-heading
+        outline-up-heading))
+
+(setq pulsar-pulse-on-window-change t)
+(setq pulsar-pulse t)
+(setq pulsar-delay 0.055)
+(setq pulsar-iterations 10)
+(setq pulsar-face 'pulsar-magenta)
+(setq pulsar-highlight-face 'pulsar-yellow)
+
+(pulsar-global-mode 1)
 
 (global-set-key (kbd "C-x x") '+vterm/toggle)
-(global-set-key (kbd "C-x b") 'counsel-switch-buffer)

@@ -30,7 +30,11 @@
 (package! org-tree-slide)
 
 (package! nyan-mode)
+(package! pulsar)
+
 (package! ob-prolog)
+
+
 
 (when (string-equal (getenv "USER") "mzanic")
     (package! kubernetes)
