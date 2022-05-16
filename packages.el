@@ -34,6 +34,7 @@
 
 (package! ob-prolog)
 
+(package! typescript-mode)
 
 
 (when (string-equal (getenv "USER") "mzanic")

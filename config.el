@@ -74,6 +74,7 @@
   (kbd "T") 'dired-do-touch
   (kbd "Y") 'dired-copy-filenamecopy-filename-as-kill ; copies filename to kill ring.
   (kbd "+") 'dired-create-directory
+  (kbd "n") 'find-file
   (kbd "-") 'dired-up-directory
   (kbd "% l") 'dired-downcase
   (kbd "% u") 'dired-upcase
@@ -375,5 +376,8 @@
 (setq pulsar-highlight-face 'pulsar-yellow)
 
 (pulsar-global-mode 1)
+
+;; (use-package! typescript-mode
+;;   :hook ())
 
 (global-set-key (kbd "C-x x") '+vterm/toggle)
