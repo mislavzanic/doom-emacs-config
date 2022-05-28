@@ -1,4 +1,4 @@
-(server-start)
+;; (server-start)
 
 (setq user-full-name "Mislav Zanic"
       user-mail-address "mislavzanic3@gmail.com")
@@ -8,7 +8,7 @@
        :desc "List bookmarks" "L" #'list-bookmarks
        :desc "Save current bookmarks to bookmark file" "w" #'bookmark-save))
 
-(global-set-key (kbd "C-x b") 'exwm-workspace-switch-to-buffer)
+;; (global-set-key (kbd "C-x b") 'exwm-workspace-switch-to-buffer)
 
 (defadvice! prompt-for-buffer (&rest _)
   :after 'window-split (switch-to-buffer))
@@ -26,6 +26,26 @@
 (setq modus-themes-vivendi-color-overrides
       '((bg-alt . "#000000")))
 (setq doom-theme 'modus-vivendi)
+
+(use-package! dap-mode
+  :config
+  (dap-mode 1)
+ ;; (setq dap-print-io)
+  (require 'dap-hydra)
+  (require 'dap-dlv-go)
+
+  (use-package! dap-ui
+    :config
+    (dap-ui-mode 1)))
+
+(setq dap-ui-variable-length 200)
+
+(evil-define-key 'normal dap-mode
+  (kbd "C-c u") 'dap-up-stack-frame
+  (kbd "C-c d") 'dap-down-stack-frame
+  (kbd "C-c b") 'dap-breakpoint-add)
+(evil-define-key 'normal go-mode-map
+  (kbd "C-c C-p") 'dap-debug)
 
 (use-package! dashboard
   :config
@@ -134,8 +154,8 @@
     (setq eshell-destroy-buffer-when-process-dies t)
     (setq eshell-visual-commands '("htop" "zsh" "vim"))))
 
-(when IS-LINUX
-    (load! "~/.config/.dotfiles/config/emacs/exwm/+exwm"))
+;; (when IS-LINUX
+;;     (load! "~/.config/.dotfiles/config/emacs/exwm/+exwm"))
 
 (setq doom-font (font-spec :family "JetBrains Mono" :size 12)
       doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 12)
@@ -376,8 +396,5 @@
 (setq pulsar-highlight-face 'pulsar-yellow)
 
 (pulsar-global-mode 1)
-
-;; (use-package! typescript-mode
-;;   :hook ())
 
 (global-set-key (kbd "C-x x") '+vterm/toggle)

@@ -42,3 +42,5 @@
     (package! kubernetes-evil))
 
 (unpin! (:lang go) (:tools lsp))
+(package! go-dlv)
+(package! dap-mode)

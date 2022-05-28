@@ -5,7 +5,8 @@
  ;; If there is more than one, they won't work right.
  '(doom-modeline-bar-width 4)
  '(package-selected-packages
-   '(lsp-haskell pdf-tools kubel-evil kubel kubernetes-evil elfeed vterm-toggle all-the-icons-ivy lsp-pyright org-superstar dmenu exwm vterm)))
+   '(lsp-haskell pdf-tools kubel-evil kubel kubernetes-evil elfeed vterm-toggle all-the-icons-ivy lsp-pyright org-superstar dmenu exwm vterm))
+ '(warning-suppress-types '((emacs))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
